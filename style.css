@@ -38,66 +38,57 @@ body{
     z-index:0;
 }
 
-main{
+main {
+    position: fixed;
 
-    position:relative;
+    top: 70px;
+    left: 70px;
 
-    z-index:1;
+    z-index: 1;
 
-    text-align:center;
+    text-align: left;
 
-    color:white;
+    color: white;
 
-    text-shadow:
-        0 2px 12px rgba(0,0,0,.6);
+    max-width: 420px;
 }
 
-h1{
+h1 {
+    font-family: "IBM Plex Mono", monospace;
 
-    font-family:"Cormorant Garamond", serif;
+    font-size: 2.2rem;
 
-    font-size:5rem;
+    font-weight: 400;
 
-    font-weight:500;
+    margin-bottom: .8rem;
 
-    letter-spacing:.04em;
-
-    margin-bottom:.5rem;
+    letter-spacing: .04em;
 }
 
-.tagline{
+.tagline {
 
-    font-size:1rem;
+    font-family: "IBM Plex Mono", monospace;
 
-    letter-spacing:.18em;
+    font-size: .8rem;
 
-    text-transform:uppercase;
+    letter-spacing: .18em;
 
-    opacity:.95;
+    text-transform: uppercase;
 
-    margin-bottom:2.5rem;
+    margin-bottom: 1.8rem;
 }
 
-.email{
+.email {
 
-    color:white;
+    font-family: "IBM Plex Mono", monospace;
 
-    text-decoration:none;
+    font-size: .8rem;
 
-    font-size:.95rem;
+    text-decoration: none;
 
-    border-bottom:1px solid rgba(255,255,255,.5);
+    color: inherit;
 
-    padding-bottom:.15rem;
-
-    transition:.25s;
-}
-
-.email:hover{
-
-    border-color:white;
-
-    opacity:.8;
+    border: none;
 }
 
 @media(max-width:700px){
