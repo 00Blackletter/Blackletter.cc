@@ -53,7 +53,7 @@ body {
     display: block;
 
     width: 56px;
-    height: 56px;
+    height: auto;
 
     object-fit: contain;
 }
