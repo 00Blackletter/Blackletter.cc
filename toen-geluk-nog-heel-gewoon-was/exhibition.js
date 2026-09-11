@@ -230,7 +230,7 @@ map.on("click", function(event) {
             new Date().toISOString().split("T")[0];
 
 
-        submitButton.addEventListener("click", function() {
+        submitButton.addEventListener("click", async function() {
 
             const file = photoInput.files[0];
 
@@ -247,8 +247,73 @@ map.on("click", function(event) {
                 errorMessage.textContent =
                     "Please choose an image smaller than 10 MB.";
                 return;
+                
             }
+            /*Send file to API contribution endpoint godsgreenearth */
+            const formData = new FormData();
 
+formData.append("photo", file);
+formData.append("name", visitorName);
+formData.append("photo_date", photographDate);
+formData.append("latitude", selectedLocation.lat);
+formData.append("longitude", selectedLocation.lng);
+
+submitButton.disabled = true;
+submitButton.textContent = "Submitting…";
+
+
+try {
+
+    const response = await fetch(
+        "/api/contributions",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+
+    const result =
+        await response.json();
+
+
+    if (!response.ok) {
+        throw new Error(
+            result.error || "Upload failed."
+        );
+    }
+
+
+    /*
+       Keep displaying the photograph locally
+       for the person who submitted it.
+    */
+
+    const photoURL =
+        URL.createObjectURL(file);
+
+
+    /* your existing photo-marker creation code goes here */
+
+
+    map.closePopup();
+
+
+    alert(
+        "Thank you — your photograph has been submitted."
+    );
+
+
+} catch (error) {
+
+    errorMessage.textContent =
+        error.message;
+
+} finally {
+
+    submitButton.disabled = false;
+    submitButton.textContent = "Add to map";
+}
 
             const photoURL =
                 URL.createObjectURL(file);
@@ -327,6 +392,114 @@ map.on("click", function(event) {
     }
 );
 
+
+async function loadContributions() {
+
+    try {
+
+        const response =
+            await fetch("/api/contributions");
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load contributions."
+            );
+        }
+
+
+        const contributions =
+            await response.json();
+
+
+        contributions.forEach(item => {
+
+            const photoIcon =
+                L.divIcon({
+
+                    className: "photo-marker",
+
+                    html: `
+                        <img
+                            src="${item.image_url}"
+                            alt="Photograph by ${escapeHTML(item.name || "visitor")}"
+                        >
+                    `,
+
+                    iconSize: [52, 52],
+                    iconAnchor: [26, 26]
+                });
+
+
+            const marker =
+                L.marker(
+                    [
+                        item.latitude,
+                        item.longitude
+                    ],
+                    {
+                        icon: photoIcon
+                    }
+                )
+                .addTo(map);
+
+
+            let caption = "";
+
+
+            if (item.name) {
+                caption += `
+                    <div class="photo-name">
+                        ${escapeHTML(item.name)}
+                    </div>
+                `;
+            }
+
+
+            if (item.photo_date) {
+                caption += `
+                    <div class="photo-date">
+                        ${escapeHTML(item.photo_date)}
+                    </div>
+                `;
+            }
+
+
+            marker.bindPopup(
+                `
+                    <div class="photo-popup">
+
+                        <img
+                            src="${item.image_url}"
+                            alt="Visitor photograph"
+                        >
+
+                        <div class="photo-caption">
+                            ${caption}
+                        </div>
+
+                    </div>
+                `,
+                {
+                    maxWidth: 900,
+                    className:
+                        "photo-viewer-popup",
+                    autoPanPadding: [40, 40]
+                }
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+loadContributions();
 
             /* Remove temporary placement marker */
 
