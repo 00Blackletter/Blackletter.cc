@@ -22,19 +22,12 @@ body {
     transition: background-image .6s ease;
 }
 
-#overlay {
-    position: fixed;
-    inset: 0;
-
-    background: rgba(0, 0, 0, .18);
-
-    z-index: 0;
-}
 
 /* Bottom-left identity */
 
 .site-identity {
     position: fixed;
+
     left: 32px;
     bottom: 40px;
 
@@ -46,7 +39,8 @@ body {
 .identity-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+
+    gap: 14px;
 }
 
 .site-logo {
@@ -58,10 +52,19 @@ body {
     object-fit: contain;
 }
 
+.identity-text {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
 .site-name {
     font-family: "Inter", sans-serif;
+
     font-size: 1.25rem;
     font-weight: 400;
+    line-height: 1.1;
 
     color: white;
 }
@@ -69,12 +72,13 @@ body {
 .email {
     display: block;
 
-    margin-left: 80px;
-    margin-top: 3px;
+    margin: 0;
 
     font-family: "Inter", sans-serif;
-    font-size: 1.0rem;
+
+    font-size: 0.9rem;
     font-weight: 300;
+    line-height: 1.1;
 
     color: white;
     text-decoration: none;
@@ -84,29 +88,12 @@ body {
     color: red;
 }
 
-@media (max-width: 700px) {
 
-    .site-identity {
-        left: 20px;
-        bottom: 20px;
-    }
+/* Featured exhibition */
 
-    .site-logo {
-        width: 50px;
-        height: auto;
-    }
-
-    .site-name {
-        font-size: 1rem;
-    }
-
-    .email {
-        margin-left: 36px;
-        font-size: 0.7rem;
-    }
-}
 .featured-project {
     position: fixed;
+
     left: 32px;
     top: 32px;
 
@@ -124,6 +111,7 @@ body {
 .featured-title {
     font-size: clamp(2.5rem, 5vw, 5rem);
     font-weight: 400;
+
     line-height: .95;
 }
 
@@ -131,6 +119,7 @@ body {
     margin-top: 14px;
 
     font-size: .85rem;
+
     letter-spacing: .08em;
 }
 
@@ -138,4 +127,38 @@ body {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 8px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .site-identity {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .site-logo {
+        width: 44px;
+    }
+
+    .site-name {
+        font-size: 1rem;
+    }
+
+    .email {
+        font-size: .75rem;
+    }
+
+    .featured-project {
+        left: 20px;
+        top: 20px;
+
+        max-width: calc(100vw - 40px);
+    }
+
+    .featured-title {
+        font-size: 2.5rem;
+    }
 }
