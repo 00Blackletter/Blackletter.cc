@@ -31,53 +31,52 @@ body {
     z-index: 0;
 }
 
+/* Bottom-left identity */
+
 .site-identity {
     position: fixed;
-    left: 40px;
-    bottom: 40px;
+    left: 32px;
+    bottom: 32px;
 
     z-index: 10;
 
     color: white;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
 }
 
 .identity-row {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
 }
 
 .site-logo {
-    width: 58px;
-    height: auto;
-
     display: block;
+
+    width: 28px;
+    height: 28px;
+
+    object-fit: contain;
 }
 
 .site-name {
     font-family: "Inter", sans-serif;
-
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     font-weight: 400;
 
     color: white;
 }
 
 .email {
-    margin-left: 76px;
-    margin-top: 8px;
+    display: block;
+
+    margin-left: 40px;
+    margin-top: 5px;
 
     font-family: "Inter", sans-serif;
-
-    font-size: .9rem;
+    font-size: 0.75rem;
     font-weight: 300;
 
     color: white;
-
     text-decoration: none;
 }
 
@@ -88,20 +87,21 @@ body {
 @media (max-width: 700px) {
 
     .site-identity {
-        left: 24px;
-        bottom: 24px;
+        left: 20px;
+        bottom: 20px;
     }
 
     .site-logo {
-        width: 48px;
+        width: 24px;
+        height: auto;
     }
 
     .site-name {
-        font-size: 1.15rem;
+        font-size: 1rem;
     }
 
     .email {
-        margin-left: 66px;
-        font-size: .8rem;
+        margin-left: 36px;
+        font-size: 0.7rem;
     }
 }
