@@ -230,90 +230,250 @@ map.on("click", function(event) {
             new Date().toISOString().split("T")[0];
 
 
-        submitButton.addEventListener("click", async function() {
+ submitButton.addEventListener("click", async function() {
 
-            const file = photoInput.files[0];
+    const file = photoInput.files[0];
 
-            if (!file) {
-                errorMessage.textContent =
-                    "Please select a photograph.";
-                return;
-            }
-
-
-            /* Limit prototype to 10 MB */
-
-            if (file.size > 10 * 1024 * 1024) {
-                errorMessage.textContent =
-                    "Please choose an image smaller than 10 MB.";
-                return;
-                
-            }
-            /*Send file to API contribution endpoint godsgreenearth */
-            const formData = new FormData();
-
-formData.append("photo", file);
-formData.append("name", visitorName);
-formData.append("photo_date", photographDate);
-formData.append("latitude", selectedLocation.lat);
-formData.append("longitude", selectedLocation.lng);
-
-submitButton.disabled = true;
-submitButton.textContent = "Submitting…";
+    if (!file) {
+        errorMessage.textContent =
+            "Please select a photograph.";
+        return;
+    }
 
 
-try {
-
-    const response = await fetch(
-        "/api/contributions",
-        {
-            method: "POST",
-            body: formData
-        }
-    );
-
-
-    const result =
-        await response.json();
-
-
-    if (!response.ok) {
-        throw new Error(
-            result.error || "Upload failed."
-        );
+    if (file.size > 10 * 1024 * 1024) {
+        errorMessage.textContent =
+            "Please choose an image smaller than 10 MB.";
+        return;
     }
 
 
     /*
-       Keep displaying the photograph locally
-       for the person who submitted it.
+       Read all form values BEFORE creating FormData.
     */
 
-    const photoURL =
-        URL.createObjectURL(file);
+    const visitorName =
+        nameInput.value.trim();
+
+    const photographDate =
+        dateInput.value;
 
 
-    /* your existing photo-marker creation code goes here */
+    /*
+       Preserve the location while the upload runs.
+    */
+
+    const contributionLocation = {
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng
+    };
 
 
-    map.closePopup();
+    /*
+       Build request.
+    */
 
+    const formData =
+        new FormData();
 
-    alert(
-        "Thank you — your photograph has been submitted."
+    formData.append(
+        "photo",
+        file
+    );
+
+    formData.append(
+        "name",
+        visitorName
+    );
+
+    formData.append(
+        "photo_date",
+        photographDate
+    );
+
+    formData.append(
+        "latitude",
+        contributionLocation.lat
+    );
+
+    formData.append(
+        "longitude",
+        contributionLocation.lng
     );
 
 
-} catch (error) {
+    /*
+       UI while uploading.
+    */
 
-    errorMessage.textContent =
-        error.message;
+    errorMessage.textContent = "";
 
-} finally {
+    submitButton.disabled = true;
+    submitButton.textContent =
+        "Submitting…";
 
-    submitButton.disabled = false;
-    submitButton.textContent = "Add to map";
-}
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/contributions",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+            throw new Error(
+                result.error ||
+                "The photograph could not be submitted."
+            );
+        }
+
+
+        /*
+           Submission succeeded.
+
+           Display it locally immediately,
+           even though it still awaits approval.
+        */
+
+        const photoURL =
+            URL.createObjectURL(file);
+
+
+        const photoIcon =
+            L.divIcon({
+
+                className: "photo-marker",
+
+                html: `
+                    <img
+                        src="${photoURL}"
+                        alt="Visitor photograph"
+                    >
+                `,
+
+                iconSize: [52, 52],
+                iconAnchor: [26, 26]
+            });
+
+
+        const photoMarker =
+            L.marker(
+                [
+                    contributionLocation.lat,
+                    contributionLocation.lng
+                ],
+                {
+                    icon: photoIcon
+                }
+            )
+            .addTo(map);
+
+
+        let caption = "";
+
+
+        if (visitorName) {
+
+            caption += `
+                <div class="photo-name">
+                    ${escapeHTML(visitorName)}
+                </div>
+            `;
+
+        }
+
+
+        if (photographDate) {
+
+            caption += `
+                <div class="photo-date">
+                    ${escapeHTML(photographDate)}
+                </div>
+            `;
+
+        }
+
+
+        photoMarker.bindPopup(
+            `
+                <div class="photo-popup">
+
+                    <img
+                        src="${photoURL}"
+                        alt="Visitor photograph"
+                    >
+
+                    <div class="photo-caption">
+                        ${caption}
+                    </div>
+
+                </div>
+            `,
+            {
+                maxWidth: 900,
+                className: "photo-viewer-popup",
+                autoPanPadding: [40, 40]
+            }
+        );
+
+
+        /*
+           Remove temporary location marker.
+        */
+
+        if (draftMarker) {
+
+            map.removeLayer(
+                draftMarker
+            );
+
+            draftMarker = null;
+        }
+
+
+        selectedLocation = null;
+
+        map.closePopup();
+
+
+        /*
+           Confirm submission.
+        */
+
+        window.alert(
+            "Thank you — your photograph has been submitted."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Contribution upload failed:",
+            error
+        );
+
+        errorMessage.textContent =
+            error.message;
+
+
+    } finally {
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+            "Add to map";
+    }
+
+});
 
             const photoURL =
                 URL.createObjectURL(file);
