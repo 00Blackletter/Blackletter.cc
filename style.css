@@ -52,7 +52,7 @@ body {
 .site-logo {
     display: block;
 
-    width: 56px;
+    width: 50px;
     height: auto;
 
     object-fit: contain;
@@ -60,7 +60,7 @@ body {
 
 .site-name {
     font-family: "Inter", sans-serif;
-    font-size: 2.3rem;
+    font-size: 2.0rem;
     font-weight: 400;
 
     color: white;
@@ -73,7 +73,7 @@ body {
     margin-top: 10px;
 
     font-family: "Inter", sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.0rem;
     font-weight: 300;
 
     color: white;
@@ -92,7 +92,7 @@ body {
     }
 
     .site-logo {
-        width: 24px;
+        width: 50px;
         height: auto;
     }
 
