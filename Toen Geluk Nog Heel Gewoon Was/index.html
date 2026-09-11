@@ -1,86 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<div id="overlay"></div>
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Toen Geluk Nog Heel Gewoon Was — Christopher Clarkson</title>
+
+<meta
+    name="description"
+    content="Toen Geluk Nog Heel Gewoon Was — a photographic exhibition along the Schie between Rotterdam and Delft."
+>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+>
 
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
 >
 
- <input
-                type="file"
-                id="photo-file"
-                accept="image/*"
-            >
+<link rel="stylesheet" href="exhibition.css">
 
-            <button
-                type="button"
-                id="photo-submit"
-            >
-                Add photograph
-            </button>
+</head>
+
+
+<body>
+
+<div class="exhibition-layout">
+
+    <section class="exhibition-info">
+
+        <div class="exhibition-text">
+
+            <p class="exhibition-meta">
+                14–21 September 2026<br>
+                Rotterdam — Delft
+            </p>
+
+            <p>
+                <em>Toen Geluk Nog Heel Gewoon Was</em> is a photographic
+                exhibition about, and along, the river Schie.
+            </p>
+
+            <p>
+                Photographs, archival material and maps connect the history
+                of the landscape to the places encountered along bus route 40
+                between Rotterdam and Delft.
+            </p>
+
+            <p>
+                The exhibition questions the idea that ordinary happiness
+                belongs to the past, and invites us to reconsider how it
+                might be recognised in the present.
+            </p>
+
+            <p class="participation-text">
+                This map also collects photographs made by people along the
+                Schie. Select a location on the map to contribute your own.
+            </p>
 
         </div>
 
-    </div>
 
-</aside>
+        <a class="exhibition-identity" href="../">
 
-<div id="sidebar-backdrop"></div>
+            <img
+                class="site-logo"
+                src="../logo.png"
+                alt="Blackletter"
+            >
 
-<button
-    id="sidebar-toggle"
-    aria-controls="upcoming-sidebar"
-    aria-expanded="false"
->
-    Upcoming
-</button>
+            <div class="identity-text">
 
-<aside id="upcoming-sidebar">
+                <span class="identity-title">
+                    Toen Geluk Nog Heel Gewoon Was
+                </span>
 
-    <button
-        id="sidebar-close"
-        class="sidebar-close"
-        aria-label="Close"
-    >
-        ×
-    </button>
+                <span class="identity-subtitle">
+                    Christopher Clarkson
+                </span>
 
-    <div class="sidebar-content">
+            </div>
 
-        <p class="sidebar-label">Upcoming</p>
+        </a>
 
-        <h2 class="sidebar-title">
-            Toen Geluk Nog Heel Gewoon Was
-        </h2>
+    </section>
 
-        <p>
-            Click on the map to place your photograph.
-        </p>
+
+    <section class="map-section">
 
         <div id="exhibition-map"></div>
 
-        <div id="photo-upload-panel" hidden>
+    </section>
 
-            <input
-                type="file"
-                id="photo-file"
-                accept="image/*"
-            >
+</div>
 
-            <button
-                type="button"
-                id="photo-submit"
-            >
-                Upload
-            </button>
 
-        </div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="exhibition.js"></script>
 
-    </div>
+</body>
 
-</aside>
-
-<div id="sidebar-backdrop"></div>
+</html>

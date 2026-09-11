@@ -1,364 +1,231 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+
+body {
+    font-family: "Inter", sans-serif;
+
+    background: white;
+    color: #111;
+
+    overflow: hidden;
+}
+
+
+/* Main layout */
+
+.exhibition-layout {
+    display: grid;
+
+    grid-template-columns: 1fr 2fr;
+
+    width: 100%;
+    height: 100vh;
+}
+
 
 /* -------------------------
-   Upcoming sidebar
+   LEFT COLUMN
 ------------------------- */
 
-.sidebar-trigger {
-    position: fixed;
+.exhibition-info {
+    position: relative;
 
-    left: 0;
-    top: 50%;
+    height: 100vh;
 
-    transform: translateY(-50%);
+    padding: 32px;
 
-    width: 38px;
-    padding: 18px 0;
-
-    z-index: 20;
-
-    border: none;
-
-    background: rgba(0, 0, 0, .35);
-    color: white;
-
-    font-family: "Inter", sans-serif;
-    font-size: .7rem;
-    font-weight: 400;
-
-    letter-spacing: .12em;
-    text-transform: uppercase;
-
-    writing-mode: vertical-rl;
-    transform-origin: center;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(5px);
-
-    transition:
-        background .25s ease,
-        opacity .25s ease;
-}
-
-.sidebar-trigger:hover {
-    background: rgba(0, 0, 0, .55);
-}
-
-
-/* sidebar panel */
-
-.sidebar {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: min(460px, 90vw);
-    height: 100%;
-
-    z-index: 30;
-
-    background: rgba(248, 248, 245, .97);
-    color: #111;
-
-    transform: translateX(-100%);
-
-    transition: transform .4s ease;
-
-    overflow-y: auto;
-}
-
-.sidebar.open {
-    transform: translateX(0);
-}
-
-
-/* sidebar content */
-
-.sidebar-content {
-    padding: 70px 40px 50px 40px;
-}
-
-.sidebar-label {
-    margin-bottom: 12px;
-
-    font-size: .7rem;
-
-    letter-spacing: .18em;
-    text-transform: uppercase;
-}
-
-.sidebar-title {
-    max-width: 350px;
-
-    margin-bottom: 40px;
-
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.1;
-}
-
-.map-instruction {
-    margin-bottom: 12px;
-
-    font-size: .75rem;
-    line-height: 1.5;
-}
-
-
-/* map */
-
-#exhibition-map {
-    width: 100%;
-    height: 320px;
-
-    background: #ddd;
-}
-
-
-/* upload area */
-
-#photo-upload-panel {
-    margin-top: 20px;
-}
-
-#photo-file {
-    display: block;
-
-    width: 100%;
-
-    margin-bottom: 12px;
-
-    font-family: "Inter", sans-serif;
-    font-size: .75rem;
-}
-
-#photo-submit {
-    padding: 10px 14px;
-
-    border: 1px solid #111;
-
-    background: transparent;
-    color: #111;
-
-    font-family: "Inter", sans-serif;
-    font-size: .75rem;
-
-    cursor: pointer;
-}
-
-#photo-submit:hover {
-    background: #111;
-    color: white;
-}
-
-
-/* close button */
-
-.sidebar-close {
-    position: absolute;
-
-    top: 24px;
-    right: 26px;
-
-    border: none;
-    background: transparent;
-
-    color: #111;
-
-    font-size: 1.8rem;
-    font-weight: 300;
-
-    cursor: pointer;
-}
-
-
-/* darken photograph while sidebar is open */
-
-#sidebar-backdrop {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 25;
-
-    background: rgba(0, 0, 0, .3);
-
-    opacity: 0;
-    pointer-events: none;
-
-    transition: opacity .4s ease;
-}
-
-#sidebar-backdrop.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-
-/* image inside map popup */
-
-.map-photo {
-    display: block;
-
-    width: 180px;
-    max-width: 100%;
-
-    height: auto;
-}
-
-
-/* mobile */
-
-@media (max-width: 700px) {
-
-    .sidebar-content {
-        padding: 65px 24px 40px 24px;
-    }
-
-    .sidebar-title {
-        font-size: 1.7rem;
-    }
-
-    #exhibition-map {
-        height: 300px;
-    }
-
-}
-
-/* --- UPCOMING SIDEBAR --- */
-
-[hidden] {
-    display: none !important;
-}
-
-#sidebar-toggle {
-    position: fixed !important;
-    left: 0 !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-
-    z-index: 100 !important;
-
-    padding: 18px 10px;
-
-    border: 0;
-    background: rgba(0,0,0,0.45);
-    color: white;
-
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-
-    writing-mode: vertical-rl;
-
-    cursor: pointer;
-}
-
-#upcoming-sidebar {
-    position: fixed !important;
-
-    top: 0 !important;
-    left: 0 !important;
-
-    width: min(460px, 90vw) !important;
-    height: 100vh !important;
-
-    z-index: 200 !important;
-
-    background: white !important;
-    color: black !important;
-
-    transform: translateX(-100%);
-    transition: transform 0.4s ease;
-
-    overflow-y: auto;
-}
-
-#upcoming-sidebar.open {
-    transform: translateX(0) !important;
-}
-
-.sidebar-content {
-    padding: 70px 40px 50px;
-}
-
-.sidebar-label {
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-
-    margin-bottom: 12px;
-}
-
-.sidebar-title {
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.1;
-
-    margin-bottom: 35px;
-}
-
-.sidebar-close {
-    position: absolute;
-
-    top: 20px;
-    right: 24px;
-
-    border: 0;
-    background: transparent;
-
-    font-size: 30px;
-
-    cursor: pointer;
-}
-
-#exhibition-map {
-    display: block !important;
-
-    width: 100% !important;
-    height: 350px !important;
-
-    background: #ddd;
-}
-
-#photo-upload-panel {
-    margin-top: 20px;
-}
-
-#photo-file {
-    display: block;
-
-    margin-bottom: 12px;
-}
-
-#photo-submit {
-    padding: 10px 14px;
-
-    border: 1px solid black;
     background: white;
-    color: black;
 
-    cursor: pointer;
+    border-right: 1px solid rgba(0, 0, 0, .15);
 }
 
-#sidebar-backdrop {
-    position: fixed;
 
-    inset: 0;
+/* Main text */
 
-    z-index: 150;
+.exhibition-text {
+    max-width: 390px;
 
-    background: rgba(0,0,0,0.3);
-
-    opacity: 0;
-    pointer-events: none;
-
-    transition: opacity 0.4s ease;
+    font-size: .9rem;
+    font-weight: 300;
+    line-height: 1.55;
 }
 
-#sidebar-backdrop.visible {
-    opacity: 1;
-    pointer-events: auto;
+.exhibition-text p {
+    margin-bottom: 1.2rem;
+}
+
+.exhibition-meta {
+    margin-bottom: 2.2rem !important;
+
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    letter-spacing: .05em;
+}
+
+.participation-text {
+    margin-top: 2rem;
+
+    font-weight: 400;
+}
+
+
+/* -------------------------
+   BOTTOM-LEFT IDENTITY
+------------------------- */
+
+.exhibition-identity {
+    position: absolute;
+
+    left: 32px;
+    bottom: 40px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    max-width: calc(100% - 64px);
+
+    color: #111;
+    text-decoration: none;
+}
+
+
+.site-logo {
+    display: block;
+
+    width: 50px;
+    height: auto;
+
+    flex-shrink: 0;
+}
+
+
+.identity-text {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.identity-title {
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+
+.identity-subtitle {
+    font-size: .75rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+
+.exhibition-identity:hover .identity-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+}
+
+
+/* -------------------------
+   MAP
+------------------------- */
+
+.map-section {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    background: #ddd;
+}
+
+
+#exhibition-map {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Make Leaflet typography fit site */
+
+.leaflet-container {
+    font-family: "Inter", sans-serif;
+}
+
+
+/* -------------------------
+   MOBILE
+------------------------- */
+
+@media (max-width: 800px) {
+
+    body {
+        overflow-y: auto;
+    }
+
+    .exhibition-layout {
+        display: block;
+
+        height: auto;
+    }
+
+
+    .exhibition-info {
+        min-height: 60vh;
+        height: auto;
+
+        padding: 24px;
+
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, .15);
+    }
+
+
+    .exhibition-text {
+        max-width: none;
+
+        padding-bottom: 120px;
+    }
+
+
+    .exhibition-identity {
+        left: 24px;
+        bottom: 24px;
+
+        max-width: calc(100% - 48px);
+    }
+
+
+    .site-logo {
+        width: 44px;
+    }
+
+
+    .identity-title {
+        font-size: 1rem;
+    }
+
+
+    .map-section {
+        width: 100%;
+        height: 65vh;
+    }
+
 }
