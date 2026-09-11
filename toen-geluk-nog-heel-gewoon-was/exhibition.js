@@ -35,6 +35,9 @@ customCursor.innerHTML = `
     </span>
 `;
 
+const customCursorLabel =
+    customCursor.querySelector(".map-cursor-label");
+
 document.body.appendChild(customCursor);
 
 
@@ -47,6 +50,19 @@ mapContainer.addEventListener("mousemove", function(event) {
     if (isInterface) {
         customCursor.classList.remove("visible");
         return;
+    }
+
+
+    const isPhoto =
+        event.target.closest(".photo-marker");
+
+
+    if (isPhoto) {
+        customCursorLabel.textContent =
+            "click to view photo";
+    } else {
+        customCursorLabel.textContent =
+            "click to add photo";
     }
 
 
@@ -290,18 +306,27 @@ map.on("click", function(event) {
             }
 
 
-            photoMarker.bindPopup(`
-                <div class="photo-popup">
+        photoMarker.bindPopup(
+    `
+        <div class="photo-popup">
 
-                    <img
-                        src="${photoURL}"
-                        alt="Visitor photograph"
-                    >
+            <img
+                src="${photoURL}"
+                alt="Visitor photograph"
+            >
 
-                    ${caption}
+            <div class="photo-caption">
+                ${caption}
+            </div>
 
-                </div>
-            `);
+        </div>
+    `,
+    {
+        maxWidth: 900,
+        className: "photo-viewer-popup",
+        autoPanPadding: [40, 40]
+    }
+);
 
 
             /* Remove temporary placement marker */

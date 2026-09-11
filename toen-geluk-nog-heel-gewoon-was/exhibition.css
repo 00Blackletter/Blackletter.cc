@@ -216,6 +216,17 @@ body {
         height: auto;
     }
 
+    @media (max-width: 800px) {
+
+    .photo-popup {
+        width: 78vw;
+    }
+
+    .photo-popup img {
+        max-height: 65vh;
+    }
+
+}
 
     .exhibition-info {
         min-height: 60vh;
@@ -415,20 +426,55 @@ body {
     box-shadow: 0 0 0 1px #111;
 }
 
+.photo-marker,
+.photo-marker img {
+    cursor: none !important;
+}
 
 /* -------------------------
    PHOTO POPUP
 ------------------------- */
+/* Large photograph popup */
+
+.photo-viewer-popup .leaflet-popup-content-wrapper {
+    border-radius: 0;
+    box-shadow: none;
+
+    background: white;
+
+    padding: 0;
+}
+
+.photo-viewer-popup .leaflet-popup-content {
+    margin: 0;
+
+    width: auto !important;
+}
+
+.photo-viewer-popup .leaflet-popup-tip {
+    background: white;
+    box-shadow: none;
+}
+
+.photo-popup {
+    width: min(58vw, 850px);
+}
 
 .photo-popup img {
     display: block;
 
-    width: 220px;
-    max-width: 100%;
-
+    width: 100%;
     height: auto;
 
-    margin-bottom: 10px;
+    max-height: 75vh;
+
+    object-fit: contain;
+
+    background: white;
+}
+
+.photo-caption {
+    padding: 12px 14px 14px;
 }
 
 .photo-name {
@@ -480,8 +526,8 @@ body {
 }
 
 .map-cursor-dot {
-    width: 18px;
-    height: 18px;
+    width: 9px;
+    height: 9px;
 
     flex-shrink: 0;
 
