@@ -431,6 +431,10 @@ body {
     cursor: none !important;
 }
 
+.map-cursor.over-photo .map-cursor-label {
+    display: none;
+}
+
 /* -------------------------
    PHOTO POPUP
 ------------------------- */
@@ -457,7 +461,11 @@ body {
 }
 
 .photo-popup {
-    width: min(58vw, 850px);
+    width: min(50vw, 850px);
+    
+    padding: 10px;
+
+    box-sizing: border-box;
 }
 
 .photo-popup img {

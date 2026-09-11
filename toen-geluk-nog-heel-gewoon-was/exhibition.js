@@ -58,12 +58,11 @@ mapContainer.addEventListener("mousemove", function(event) {
 
 
     if (isPhoto) {
-        customCursorLabel.textContent =
-            "click to view photo";
-    } else {
-        customCursorLabel.textContent =
-            "click to add photo";
-    }
+    customCursor.classList.add("over-photo");
+} else {
+    customCursor.classList.remove("over-photo");
+    customCursorLabel.textContent = "click to add photo";
+}
 
 
     customCursor.style.left =
