@@ -461,7 +461,7 @@ body {
 }
 
 .photo-popup {
-    width: min(50vw, 850px);
+    width: min(45vw, 850px);
     
     padding: 10px;
 
@@ -473,8 +473,6 @@ body {
 
     width: 100%;
     height: auto;
-
-    max-height: 75vh;
 
     object-fit: contain;
 
