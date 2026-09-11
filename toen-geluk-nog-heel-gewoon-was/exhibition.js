@@ -15,6 +15,57 @@ L.tileLayer(
     }
 ).addTo(map);
 
+/* -------------------------
+   Custom map cursor
+------------------------- */
+
+const mapContainer =
+    document.getElementById("exhibition-map");
+
+
+const customCursor =
+    document.createElement("div");
+
+customCursor.className = "map-cursor";
+
+customCursor.innerHTML = `
+    <span class="map-cursor-dot"></span>
+    <span class="map-cursor-label">
+        click to add photo
+    </span>
+`;
+
+document.body.appendChild(customCursor);
+
+
+mapContainer.addEventListener("mousemove", function(event) {
+
+    const isInterface =
+        event.target.closest(".leaflet-control") ||
+        event.target.closest(".leaflet-popup");
+
+    if (isInterface) {
+        customCursor.classList.remove("visible");
+        return;
+    }
+
+
+    customCursor.style.left =
+        event.clientX + "px";
+
+    customCursor.style.top =
+        event.clientY + "px";
+
+    customCursor.classList.add("visible");
+
+});
+
+
+mapContainer.addEventListener("mouseleave", function() {
+
+    customCursor.classList.remove("visible");
+
+});
 
 /* -------------------------
    Visitor contributions

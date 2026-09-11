@@ -444,3 +444,85 @@ body {
 
     color: #666;
 }
+
+/* -------------------------
+   CUSTOM MAP CURSOR
+------------------------- */
+
+#exhibition-map {
+    cursor: none;
+}
+
+.map-cursor {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transform: translate(-9px, -9px);
+
+    transition: opacity .15s ease;
+}
+
+.map-cursor.visible {
+    opacity: 1;
+}
+
+.map-cursor-dot {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: red;
+}
+
+.map-cursor-label {
+    padding: 5px 7px;
+
+    background: white;
+    color: #111;
+
+    border: 1px solid #111;
+
+    font-family: "Inter", sans-serif;
+    font-size: .65rem;
+    font-weight: 400;
+
+    white-space: nowrap;
+}
+
+
+/* Keep normal cursor over map controls and popups */
+
+.leaflet-control,
+.leaflet-popup {
+    cursor: auto;
+}
+
+
+/* No custom cursor on touch devices */
+
+@media (hover: none) {
+
+    #exhibition-map {
+        cursor: auto;
+    }
+
+    .map-cursor {
+        display: none;
+    }
+}
