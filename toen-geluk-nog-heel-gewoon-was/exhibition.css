@@ -162,6 +162,36 @@ body {
     height: 100%;
 }
 
+.leaflet-tile-pane {
+    filter:
+        grayscale(80%)
+        contrast(85%)
+        brightness(108%);
+
+    opacity: .9;
+}
+
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.leaflet-control-zoom a {
+    background: white !important;
+    color: #111 !important;
+
+    border: 1px solid #111 !important;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+}
+
+.leaflet-control-attribution {
+    background: rgba(255,255,255,.8) !important;
+
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+}
 
 /* Make Leaflet typography fit site */
 
