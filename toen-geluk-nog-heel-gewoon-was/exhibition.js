@@ -15,13 +15,13 @@ L.tileLayer(
     }
 ).addTo(map);
 
+
 /* -------------------------
    Custom map cursor
 ------------------------- */
 
 const mapContainer =
     document.getElementById("exhibition-map");
-
 
 const customCursor =
     document.createElement("div");
@@ -35,10 +35,10 @@ customCursor.innerHTML = `
     </span>
 `;
 
+document.body.appendChild(customCursor);
+
 const customCursorLabel =
     customCursor.querySelector(".map-cursor-label");
-
-document.body.appendChild(customCursor);
 
 
 mapContainer.addEventListener("mousemove", function(event) {
@@ -46,6 +46,7 @@ mapContainer.addEventListener("mousemove", function(event) {
     const isInterface =
         event.target.closest(".leaflet-control") ||
         event.target.closest(".leaflet-popup");
+
 
     if (isInterface) {
         customCursor.classList.remove("visible");
@@ -58,11 +59,16 @@ mapContainer.addEventListener("mousemove", function(event) {
 
 
     if (isPhoto) {
-    customCursor.classList.add("over-photo");
-} else {
-    customCursor.classList.remove("over-photo");
-    customCursorLabel.textContent = "click to add photo";
-}
+
+        customCursor.classList.add("over-photo");
+
+    } else {
+
+        customCursor.classList.remove("over-photo");
+
+        customCursorLabel.textContent =
+            "click to add photo";
+    }
 
 
     customCursor.style.left =
@@ -82,56 +88,214 @@ mapContainer.addEventListener("mouseleave", function() {
 
 });
 
+
 /* -------------------------
-   Visitor contributions
+   Contribution state
 ------------------------- */
 
 let selectedLocation = null;
 let draftMarker = null;
 
 
-/* Prevent visitor-entered text becoming HTML */
+/* -------------------------
+   Helper functions
+------------------------- */
 
 function escapeHTML(value) {
-    return value.replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-    })[character]);
+
+    return String(value).replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[character]
+    );
+
 }
 
 
-/* Click anywhere on map */
+function createPhotoMarker(
+    latitude,
+    longitude,
+    photoURL,
+    name = "",
+    photoDate = ""
+) {
 
-map.on("click", function(event) {
+    const safeURL =
+        escapeHTML(photoURL);
 
-    selectedLocation = event.latlng;
+    const safeName =
+        escapeHTML(name);
+
+    const safeDate =
+        escapeHTML(photoDate);
 
 
-    /* Remove previous temporary marker */
+    const photoIcon =
+        L.divIcon({
 
-    if (draftMarker) {
-        map.removeLayer(draftMarker);
+            className: "photo-marker",
+
+            html: `
+                <img
+                    src="${safeURL}"
+                    alt="Photograph${safeName ? ` by ${safeName}` : ""}"
+                >
+            `,
+
+            iconSize: [52, 52],
+            iconAnchor: [26, 26]
+        });
+
+
+    const marker =
+        L.marker(
+            [latitude, longitude],
+            {
+                icon: photoIcon
+            }
+        )
+        .addTo(map);
+
+
+    let caption = "";
+
+
+    if (name) {
+
+        caption += `
+            <div class="photo-name">
+                ${safeName}
+            </div>
+        `;
+
     }
 
 
-    /* Show small marker at chosen location */
+    if (photoDate) {
 
-    draftMarker = L.circleMarker(
-        selectedLocation,
+        caption += `
+            <div class="photo-date">
+                ${safeDate}
+            </div>
+        `;
+
+    }
+
+
+    marker.bindPopup(
+        `
+            <div class="photo-popup">
+
+                <img
+                    src="${safeURL}"
+                    alt="Visitor photograph"
+                >
+
+                <div class="photo-caption">
+                    ${caption}
+                </div>
+
+            </div>
+        `,
         {
-            radius: 6,
-            color: "#111",
-            weight: 1,
-            fillColor: "#ffffff",
-            fillOpacity: 1
+            maxWidth: 900,
+            className: "photo-viewer-popup",
+            autoPanPadding: [40, 40]
         }
-    ).addTo(map);
+    );
 
 
-    /* Contribution form */
+    return marker;
+}
+
+
+/* -------------------------
+   Load approved photographs
+------------------------- */
+
+async function loadContributions() {
+
+    try {
+
+        const response =
+            await fetch("/api/contributions");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load contributions."
+            );
+
+        }
+
+
+        const contributions =
+            await response.json();
+
+
+        contributions.forEach(item => {
+
+            createPhotoMarker(
+                item.latitude,
+                item.longitude,
+                item.image_url,
+                item.name || "",
+                item.photo_date || ""
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Could not load contributions:",
+            error
+        );
+
+    }
+
+}
+
+
+/* -------------------------
+   Click map to contribute
+------------------------- */
+
+map.on("click", function(event) {
+
+    selectedLocation =
+        event.latlng;
+
+
+    if (draftMarker) {
+
+        map.removeLayer(
+            draftMarker
+        );
+
+    }
+
+
+    draftMarker =
+        L.circleMarker(
+            selectedLocation,
+            {
+                radius: 6,
+                color: "#111",
+                weight: 1,
+                fillColor: "#ffffff",
+                fillOpacity: 1
+            }
+        )
+        .addTo(map);
+
 
     const formHTML = `
 
@@ -145,6 +309,7 @@ map.on("click", function(event) {
                 ${selectedLocation.lat.toFixed(5)},
                 ${selectedLocation.lng.toFixed(5)}
             </p>
+
 
             <label for="contribution-photo">
                 Photograph
@@ -185,6 +350,7 @@ map.on("click", function(event) {
                 Add to map
             </button>
 
+
             <p
                 id="contribution-error"
                 class="contribution-error"
@@ -204,477 +370,289 @@ map.on("click", function(event) {
         .openOn(map);
 
 
-    /* Wait until Leaflet has created the popup */
+    /*
+       Wait for Leaflet to insert
+       the popup into the page.
+    */
 
     setTimeout(function() {
 
         const photoInput =
-            document.getElementById("contribution-photo");
+            document.getElementById(
+                "contribution-photo"
+            );
 
         const nameInput =
-            document.getElementById("contribution-name");
+            document.getElementById(
+                "contribution-name"
+            );
 
         const dateInput =
-            document.getElementById("contribution-date");
+            document.getElementById(
+                "contribution-date"
+            );
 
         const submitButton =
-            document.getElementById("contribution-submit");
+            document.getElementById(
+                "contribution-submit"
+            );
 
         const errorMessage =
-            document.getElementById("contribution-error");
+            document.getElementById(
+                "contribution-error"
+            );
 
 
-        /* Default date to today */
+        if (
+            !photoInput ||
+            !nameInput ||
+            !dateInput ||
+            !submitButton ||
+            !errorMessage
+        ) {
+            return;
+        }
+
+
+        /*
+           Default date to today
+        */
+
+        const today =
+            new Date();
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(2, "0");
 
         dateInput.value =
-            new Date().toISOString().split("T")[0];
+            `${year}-${month}-${day}`;
 
 
- submitButton.addEventListener("click", async function() {
+        submitButton.addEventListener(
+            "click",
+            async function() {
 
-    const file = photoInput.files[0];
-
-    if (!file) {
-        errorMessage.textContent =
-            "Please select a photograph.";
-        return;
-    }
+                const file =
+                    photoInput.files[0];
 
 
-    if (file.size > 10 * 1024 * 1024) {
-        errorMessage.textContent =
-            "Please choose an image smaller than 10 MB.";
-        return;
-    }
+                if (!file) {
 
+                    errorMessage.textContent =
+                        "Please select a photograph.";
 
-    /*
-       Read all form values BEFORE creating FormData.
-    */
+                    return;
 
-    const visitorName =
-        nameInput.value.trim();
-
-    const photographDate =
-        dateInput.value;
-
-
-    /*
-       Preserve the location while the upload runs.
-    */
-
-    const contributionLocation = {
-        lat: selectedLocation.lat,
-        lng: selectedLocation.lng
-    };
-
-
-    /*
-       Build request.
-    */
-
-    const formData =
-        new FormData();
-
-    formData.append(
-        "photo",
-        file
-    );
-
-    formData.append(
-        "name",
-        visitorName
-    );
-
-    formData.append(
-        "photo_date",
-        photographDate
-    );
-
-    formData.append(
-        "latitude",
-        contributionLocation.lat
-    );
-
-    formData.append(
-        "longitude",
-        contributionLocation.lng
-    );
-
-
-    /*
-       UI while uploading.
-    */
-
-    errorMessage.textContent = "";
-
-    submitButton.disabled = true;
-    submitButton.textContent =
-        "Submitting…";
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/contributions",
-                {
-                    method: "POST",
-                    body: formData
                 }
-            );
 
 
-        const result =
-            await response.json();
+                if (
+                    file.size >
+                    10 * 1024 * 1024
+                ) {
+
+                    errorMessage.textContent =
+                        "Please choose an image smaller than 10 MB.";
+
+                    return;
+
+                }
 
 
-        if (!response.ok) {
-            throw new Error(
-                result.error ||
-                "The photograph could not be submitted."
-            );
-        }
+                if (!selectedLocation) {
+
+                    errorMessage.textContent =
+                        "Please choose a location.";
+
+                    return;
+
+                }
 
 
-        /*
-           Submission succeeded.
+                const visitorName =
+                    nameInput.value.trim();
 
-           Display it locally immediately,
-           even though it still awaits approval.
-        */
-
-        const photoURL =
-            URL.createObjectURL(file);
+                const photographDate =
+                    dateInput.value;
 
 
-        const photoIcon =
-            L.divIcon({
+                /*
+                   Preserve coordinates before
+                   beginning asynchronous upload.
+                */
 
-                className: "photo-marker",
+                const contributionLocation = {
 
-                html: `
-                    <img
-                        src="${photoURL}"
-                        alt="Visitor photograph"
-                    >
-                `,
+                    lat:
+                        selectedLocation.lat,
 
-                iconSize: [52, 52],
-                iconAnchor: [26, 26]
-            });
+                    lng:
+                        selectedLocation.lng
+
+                };
 
 
-        const photoMarker =
-            L.marker(
-                [
-                    contributionLocation.lat,
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "photo",
+                    file
+                );
+
+                formData.append(
+                    "name",
+                    visitorName
+                );
+
+                formData.append(
+                    "photo_date",
+                    photographDate
+                );
+
+                formData.append(
+                    "latitude",
+                    contributionLocation.lat
+                );
+
+                formData.append(
+                    "longitude",
                     contributionLocation.lng
-                ],
-                {
-                    icon: photoIcon
-                }
-            )
-            .addTo(map);
+                );
 
 
-        let caption = "";
+                errorMessage.textContent =
+                    "";
 
+                submitButton.disabled =
+                    true;
 
-        if (visitorName) {
+                submitButton.textContent =
+                    "Submitting…";
 
-            caption += `
-                <div class="photo-name">
-                    ${escapeHTML(visitorName)}
-                </div>
-            `;
 
-        }
+                try {
 
+                    const response =
+                        await fetch(
+                            "/api/contributions",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
 
-        if (photographDate) {
 
-            caption += `
-                <div class="photo-date">
-                    ${escapeHTML(photographDate)}
-                </div>
-            `;
+                    let result = {};
 
-        }
 
+                    try {
 
-        photoMarker.bindPopup(
-            `
-                <div class="photo-popup">
+                        result =
+                            await response.json();
 
-                    <img
-                        src="${photoURL}"
-                        alt="Visitor photograph"
-                    >
+                    } catch {
 
-                    <div class="photo-caption">
-                        ${caption}
-                    </div>
-
-                </div>
-            `,
-            {
-                maxWidth: 900,
-                className: "photo-viewer-popup",
-                autoPanPadding: [40, 40]
-            }
-        );
-
-
-        /*
-           Remove temporary location marker.
-        */
-
-        if (draftMarker) {
-
-            map.removeLayer(
-                draftMarker
-            );
-
-            draftMarker = null;
-        }
-
-
-        selectedLocation = null;
-
-        map.closePopup();
-
-
-        /*
-           Confirm submission.
-        */
-
-        window.alert(
-            "Thank you — your photograph has been submitted."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Contribution upload failed:",
-            error
-        );
-
-        errorMessage.textContent =
-            error.message;
-
-
-    } finally {
-
-        submitButton.disabled = false;
-
-        submitButton.textContent =
-            "Add to map";
-    }
-
-});
-
-            const photoURL =
-                URL.createObjectURL(file);
-
-            const visitorName =
-                nameInput.value.trim();
-
-            const photographDate =
-                dateInput.value;
-
-
-            /* Create photographic marker */
-
-            const photoIcon = L.divIcon({
-
-                className: "photo-marker",
-
-                html: `
-                    <img
-                        src="${photoURL}"
-                        alt="Visitor photograph"
-                    >
-                `,
-
-                iconSize: [52, 52],
-                iconAnchor: [26, 26]
-            });
-
-
-            const photoMarker = L.marker(
-                selectedLocation,
-                {
-                    icon: photoIcon
-                }
-            ).addTo(map);
-
-
-            let caption = "";
-
-            if (visitorName) {
-                caption += `
-                    <div class="photo-name">
-                        ${escapeHTML(visitorName)}
-                    </div>
-                `;
-            }
-
-            if (photographDate) {
-                caption += `
-                    <div class="photo-date">
-                        ${escapeHTML(photographDate)}
-                    </div>
-                `;
-            }
-
-
-        photoMarker.bindPopup(
-    `
-        <div class="photo-popup">
-
-            <img
-                src="${photoURL}"
-                alt="Visitor photograph"
-            >
-
-            <div class="photo-caption">
-                ${caption}
-            </div>
-
-        </div>
-    `,
-    {
-        maxWidth: 900,
-        className: "photo-viewer-popup",
-        autoPanPadding: [40, 40]
-    }
-);
-
-
-async function loadContributions() {
-
-    try {
-
-        const response =
-            await fetch("/api/contributions");
-
-
-        if (!response.ok) {
-            throw new Error(
-                "Could not load contributions."
-            );
-        }
-
-
-        const contributions =
-            await response.json();
-
-
-        contributions.forEach(item => {
-
-            const photoIcon =
-                L.divIcon({
-
-                    className: "photo-marker",
-
-                    html: `
-                        <img
-                            src="${item.image_url}"
-                            alt="Photograph by ${escapeHTML(item.name || "visitor")}"
-                        >
-                    `,
-
-                    iconSize: [52, 52],
-                    iconAnchor: [26, 26]
-                });
-
-
-            const marker =
-                L.marker(
-                    [
-                        item.latitude,
-                        item.longitude
-                    ],
-                    {
-                        icon: photoIcon
+                        /* Server returned
+                           something other than JSON */
                     }
-                )
-                .addTo(map);
 
 
-            let caption = "";
+                    if (!response.ok) {
+
+                        throw new Error(
+                            result.error ||
+                            "The photograph could not be submitted."
+                        );
+
+                    }
 
 
-            if (item.name) {
-                caption += `
-                    <div class="photo-name">
-                        ${escapeHTML(item.name)}
-                    </div>
-                `;
-            }
+                    /*
+                       Show submission locally
+                       immediately.
+                    */
+
+                    const photoURL =
+                        URL.createObjectURL(
+                            file
+                        );
 
 
-            if (item.photo_date) {
-                caption += `
-                    <div class="photo-date">
-                        ${escapeHTML(item.photo_date)}
-                    </div>
-                `;
-            }
+                    createPhotoMarker(
+                        contributionLocation.lat,
+                        contributionLocation.lng,
+                        photoURL,
+                        visitorName,
+                        photographDate
+                    );
 
 
-            marker.bindPopup(
-                `
-                    <div class="photo-popup">
+                    if (draftMarker) {
 
-                        <img
-                            src="${item.image_url}"
-                            alt="Visitor photograph"
-                        >
+                        map.removeLayer(
+                            draftMarker
+                        );
 
-                        <div class="photo-caption">
-                            ${caption}
-                        </div>
+                        draftMarker = null;
 
-                    </div>
-                `,
-                {
-                    maxWidth: 900,
-                    className:
-                        "photo-viewer-popup",
-                    autoPanPadding: [40, 40]
+                    }
+
+
+                    selectedLocation =
+                        null;
+
+                    map.closePopup();
+
+
+                    window.alert(
+                        "Thank you — your photograph has been submitted."
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Contribution upload failed:",
+                        error
+                    );
+
+
+                    errorMessage.textContent =
+                        error.message;
+
+
+                } finally {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "Add to map";
+
                 }
-            );
 
-        });
-
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-}
-
-
-loadContributions();
-
-            /* Remove temporary placement marker */
-
-            if (draftMarker) {
-                map.removeLayer(draftMarker);
-                draftMarker = null;
             }
-
-
-            map.closePopup();
-
-            selectedLocation = null;
-
-        });
+        );
 
     }, 0);
 
 });
+
+
+/* -------------------------
+   Initialise contributions
+------------------------- */
+
+loadContributions();
