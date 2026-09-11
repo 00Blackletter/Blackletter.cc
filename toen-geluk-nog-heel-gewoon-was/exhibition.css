@@ -259,3 +259,188 @@ body {
     }
 
 }
+
+/* -------------------------
+   CONTRIBUTION POPUP
+------------------------- */
+
+.contribution-popup .leaflet-popup-content-wrapper {
+    border-radius: 0;
+
+    box-shadow: none;
+
+    border: 1px solid #111;
+
+    background: white;
+}
+
+.contribution-popup .leaflet-popup-tip {
+    background: white;
+    box-shadow: none;
+}
+
+.contribution-popup .leaflet-popup-content {
+    margin: 18px;
+
+    font-family: "Inter", sans-serif;
+}
+
+
+.contribution-form {
+    width: 220px;
+}
+
+.contribution-heading {
+    margin-bottom: 6px;
+
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.contribution-location {
+    margin-bottom: 18px;
+
+    font-size: .65rem;
+    font-weight: 300;
+
+    color: #777;
+}
+
+
+.contribution-form label {
+    display: block;
+
+    margin-top: 12px;
+    margin-bottom: 4px;
+
+    font-size: .7rem;
+    font-weight: 400;
+}
+
+
+.contribution-form input[type="text"],
+.contribution-form input[type="date"] {
+    width: 100%;
+
+    padding: 7px;
+
+    border: 1px solid #aaa;
+    border-radius: 0;
+
+    background: white;
+
+    font-family: "Inter", sans-serif;
+    font-size: .75rem;
+}
+
+
+.contribution-form input[type="file"] {
+    width: 100%;
+
+    font-family: "Inter", sans-serif;
+    font-size: .7rem;
+}
+
+
+.contribution-form input[type="file"]::file-selector-button {
+    padding: 7px 10px;
+
+    margin-right: 8px;
+
+    border: 1px solid #111;
+    border-radius: 0;
+
+    background: white;
+    color: #111;
+
+    font-family: "Inter", sans-serif;
+
+    cursor: pointer;
+}
+
+
+#contribution-submit {
+    width: 100%;
+
+    margin-top: 18px;
+    padding: 9px;
+
+    border: 1px solid #111;
+    border-radius: 0;
+
+    background: #111;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-size: .75rem;
+
+    cursor: pointer;
+}
+
+
+#contribution-submit:hover {
+    background: white;
+    color: #111;
+}
+
+
+.contribution-error {
+    margin-top: 8px;
+
+    font-size: .7rem;
+
+    color: red;
+}
+
+
+/* -------------------------
+   PHOTO MARKERS
+------------------------- */
+
+.photo-marker {
+    background: none;
+    border: none;
+}
+
+.photo-marker img {
+    width: 52px;
+    height: 52px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border: 2px solid white;
+
+    box-shadow: 0 0 0 1px #111;
+}
+
+
+/* -------------------------
+   PHOTO POPUP
+------------------------- */
+
+.photo-popup img {
+    display: block;
+
+    width: 220px;
+    max-width: 100%;
+
+    height: auto;
+
+    margin-bottom: 10px;
+}
+
+.photo-name {
+    font-size: .8rem;
+    font-weight: 400;
+}
+
+.photo-date {
+    margin-top: 2px;
+
+    font-size: .7rem;
+    font-weight: 300;
+
+    color: #666;
+}
