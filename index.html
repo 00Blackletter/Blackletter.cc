@@ -50,6 +50,61 @@
 
 <div id="sidebar-backdrop"></div>
 
+<button
+    id="sidebar-toggle"
+    aria-controls="upcoming-sidebar"
+    aria-expanded="false"
+>
+    Upcoming
+</button>
+
+<aside id="upcoming-sidebar">
+
+    <button
+        id="sidebar-close"
+        class="sidebar-close"
+        aria-label="Close"
+    >
+        ×
+    </button>
+
+    <div class="sidebar-content">
+
+        <p class="sidebar-label">Upcoming</p>
+
+        <h2 class="sidebar-title">
+            Toen Geluk Nog Heel Gewoon Was
+        </h2>
+
+        <p>
+            Click on the map to place your photograph.
+        </p>
+
+        <div id="exhibition-map"></div>
+
+        <div id="photo-upload-panel" hidden>
+
+            <input
+                type="file"
+                id="photo-file"
+                accept="image/*"
+            >
+
+            <button
+                type="button"
+                id="photo-submit"
+            >
+                Upload
+            </button>
+
+        </div>
+
+    </div>
+
+</aside>
+
+<div id="sidebar-backdrop"></div>
+
 <div class="site-identity">
 
     <div class="identity-row">
