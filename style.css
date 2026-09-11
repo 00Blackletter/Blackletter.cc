@@ -46,21 +46,21 @@ body {
 .identity-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 24px;
 }
 
 .site-logo {
     display: block;
 
-    width: 28px;
-    height: 28px;
+    width: 56px;
+    height: 56px;
 
     object-fit: contain;
 }
 
 .site-name {
     font-family: "Inter", sans-serif;
-    font-size: 1.15rem;
+    font-size: 2.3rem;
     font-weight: 400;
 
     color: white;
@@ -69,11 +69,11 @@ body {
 .email {
     display: block;
 
-    margin-left: 40px;
-    margin-top: 5px;
+    margin-left: 80px;
+    margin-top: 10px;
 
     font-family: "Inter", sans-serif;
-    font-size: 0.75rem;
+    font-size: 1.5rem;
     font-weight: 300;
 
     color: white;
@@ -81,7 +81,7 @@ body {
 }
 
 .email:hover {
-    text-decoration: underline;
+    color: red;
 }
 
 @media (max-width: 700px) {
