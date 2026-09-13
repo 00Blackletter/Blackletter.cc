@@ -26,7 +26,7 @@ fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40.geojson')
     L.geoJSON(data, {
       style: {
         color: '#d71920',
-        weight: 3,
+        weight: 1.5,
         opacity: 1,
         interactive: false
       }
