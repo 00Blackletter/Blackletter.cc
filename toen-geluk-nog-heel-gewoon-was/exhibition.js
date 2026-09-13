@@ -16,6 +16,25 @@ L.tileLayer(
 ).addTo(map);
 
 
+/*_ _ _ _ _ _ _ _ __ __ _ _ _ 
+    Add Bus Route
+    _ _ _ _ _ _ _ _ _ _ _ _ _*/
+
+fetch('/data/bus40.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+        color: '#d71920',
+        weight: 3,
+        opacity: 1
+      }
+    }).addTo(map);
+  })
+  .catch(error => {
+    console.error('Could not load bus route:', error);
+  });
+
 /* -------------------------
    Custom map cursor
 ------------------------- */
