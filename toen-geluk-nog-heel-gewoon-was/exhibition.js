@@ -17,7 +17,7 @@ L.tileLayer(
 
 
 /*_ _ _ _ _ _ _ _ __ __ _ _ _ 
-    Add Bus Route
+    Add Bus Route & stops
     _ _ _ _ _ _ _ _ _ _ _ _ _*/
 
 fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40.geojson')
@@ -27,12 +27,33 @@ fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40.geojson')
       style: {
         color: '#d71920',
         weight: 3,
-        opacity: 1
+        opacity: 1,
+        interactive: false
       }
     }).addTo(map);
   })
   .catch(error => {
     console.error('Could not load bus route:', error);
+  });
+
+fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40stops.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 2,
+          color: '#d71920',
+          fillColor: '#d71920',
+          fillOpacity: 1,
+          weight: 0,
+          interactive: false
+        });
+      }
+    }).addTo(map);
+  })
+  .catch(error => {
+    console.error('Could not load bus stops:', error);
   });
 
 /* -------------------------
