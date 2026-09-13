@@ -42,7 +42,7 @@ fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40stops.geojson')
     L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, {
-          radius: 30,
+          radius: 10,
           color: '#d71920',
           fillColor: '#d71920',
           fillOpacity: 1,
