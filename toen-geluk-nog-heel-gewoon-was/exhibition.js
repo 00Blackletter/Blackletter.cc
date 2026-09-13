@@ -39,18 +39,35 @@ fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40.geojson')
 fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40stops.geojson')
   .then(response => response.json())
   .then(data => {
+
     L.geoJSON(data, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 4,
+
+      pointToLayer: function(feature, latlng) {
+
+        const marker = L.circleMarker(latlng, {
+          radius: 3,
           color: '#d71920',
           fillColor: '#d71920',
           fillOpacity: 1,
           weight: 0,
-          interactive: false
+          interactive: true,
+          className: 'bus-stop-marker'
         });
+
+        marker.on('add', function() {
+          const element = marker.getElement();
+
+          if (element) {
+            element.dataset.stopName =
+              feature.properties.name;
+          }
+        });
+
+        return marker;
       }
+
     }).addTo(map);
+
   })
   .catch(error => {
     console.error('Could not load bus stops:', error);
@@ -95,20 +112,30 @@ mapContainer.addEventListener("mousemove", function(event) {
 
 
     const isPhoto =
-        event.target.closest(".photo-marker");
+    event.target.closest(".photo-marker");
+
+const busStop =
+    event.target.closest(".bus-stop-marker");
 
 
-    if (isPhoto) {
+if (isPhoto) {
 
-        customCursor.classList.add("over-photo");
+    customCursor.classList.add("over-photo");
 
-    } else {
+} else if (busStop) {
 
-        customCursor.classList.remove("over-photo");
+    customCursor.classList.remove("over-photo");
 
-        customCursorLabel.textContent =
-            "click to add photo";
-    }
+    customCursorLabel.textContent =
+        busStop.dataset.stopName;
+
+} else {
+
+    customCursor.classList.remove("over-photo");
+
+    customCursorLabel.textContent =
+        "click to add photo";
+}
 
 
     customCursor.style.left =
