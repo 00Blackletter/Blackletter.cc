@@ -20,7 +20,7 @@ L.tileLayer(
     Add Bus Route
     _ _ _ _ _ _ _ _ _ _ _ _ _*/
 
-fetch('./data/bus40.geojson')
+fetch('/toen-geluk-nog-heel-gewoon-was/data/bus40.geojson')
   .then(response => response.json())
   .then(data => {
     L.geoJSON(data, {
